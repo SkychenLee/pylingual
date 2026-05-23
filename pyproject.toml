@@ -38,6 +38,12 @@ pylingual = "pylingual.main:main"
 requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+include = ["pylingual*"]
+
+[tool.setuptools.package-data]
+"pylingual" = ["*.yaml", "*.yml", "*.json", "*.cfg", "*.txt", "*.tmpl"]
+
 # linter and formatter
 [tool.ruff]
 # Exclude commonly ignored directories.
