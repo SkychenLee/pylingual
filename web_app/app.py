@@ -20,7 +20,6 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile, WebSocket, W
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from pylingual.decompiler import decompile
 from pylingual.editable_bytecode import PYCFile
 
 
@@ -136,6 +135,7 @@ class DecompilationService:
     def run(self):
         from pylingual.utils.version import PythonVersion
         from pylingual.equivalence_check import TestResult
+        from pylingual.decompiler import Decompiler
 
         try:
             if not self.pyc_path.exists():
@@ -148,20 +148,23 @@ class DecompilationService:
                 except Exception:
                     pyver = None
 
+            pyver = pyver or PythonVersion(3.10)
+            segmenter, translator = _load_models_cached(pyver)
+            pyc = PYCFile(self.pyc_path)
+
             with _tracked_list_hooks(
                 on_init=lambda name, total: self.on_progress(name, 0, total),
                 on_progress=lambda name, cur, tot: self.on_progress(name, cur, tot),
             ):
-                _load_models_cached(pyver or "3.10")
-
-                result = decompile(
-                    pyc=self.pyc_path,
-                    save_to=None,
-                    config_file=None,
+                decompiler = Decompiler(
+                    pyc=pyc,
+                    segmenter=segmenter,
+                    translator=translator,
                     version=pyver,
                     top_k=10,
                     trust_lnotab=False,
                 )
+                result = decompiler()
 
             source = result.decompiled_source
             eq_results = result.equivalence_results or []

@@ -146,9 +146,9 @@ function App() {
       </main>
 
       <footer className="footer">
-        <a href="https://pylingual.io" target="_blank" rel="noopener noreferrer">pylingual.io</a>
+        <a href="https://github.com/SkychenLee/pylingua" target="_blank" rel="noopener noreferrer">https://github.com/SkychenLee/pylingua</a>
         {' | '}
-        <a href="https://github.com/syssec-utd/pylingual" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://github.com/SkychenLee/pylingua" target="_blank" rel="noopener noreferrer">GitHub</a>
         {' | '}
         <span>Py大星 Web 版</span>
       </footer>
