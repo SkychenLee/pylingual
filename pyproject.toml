@@ -1,6 +1,3 @@
-[tool.poetry]
-requires-poetry = ">=2.0"
-
 [project]
 name = "pylingual"
 version = "0.1.0"
@@ -38,8 +35,8 @@ homepage = "https://pylingual.io"
 pylingual = "pylingual.main:main"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
 
 # linter and formatter
 [tool.ruff]
