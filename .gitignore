@@ -17,3 +17,6 @@ mise.toml
 dist/
 decompiled_*/
 decompiled_*.py
+web_app/uploads/
+web/node_modules/
+
