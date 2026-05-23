@@ -269,10 +269,10 @@ async def ws_decompile(websocket: WebSocket, task_id: str):
                     break
             except asyncio.TimeoutError:
                 if not thread.is_alive():
-                await websocket.send_json({
-                    "type": "error",
-                    "message": "反编译进程异常终止",
-                })
+                    await websocket.send_json({
+                        "type": "error",
+                        "message": "反编译进程异常终止",
+                    })
                     break
                 await websocket.send_json({"type": "ping"})
     except WebSocketDisconnect:

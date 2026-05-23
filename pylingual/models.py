@@ -115,7 +115,16 @@ def load_models(config_file: Path = Path("pylingual/decompiler_config.yaml"), ve
         sep_token="[SEP]",
         mask_token="[MASK]",
     )
-    if torch.cuda.is_available():
+    _ = torch.Tensor
+    try:
+        import torch_npu  # noqa: F401
+    except ImportError:
+        pass
+
+    if hasattr(torch, "npu") and torch.npu.is_available():
+        logger.info(f"Using Huawei Ascend NPU for models ({torch.npu.get_device_name(0)})")
+        device = torch.device("npu:0")
+    elif torch.cuda.is_available():
         logger.info("Using CUDA GPU for models")
         device = torch.device("cuda:0")
     elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
