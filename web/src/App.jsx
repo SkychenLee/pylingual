@@ -113,7 +113,7 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>Py大星</h1>
+        <h1>PyXray</h1>
         <p className="subtitle">Python 字节码反编译器  |  支持 Python 3.6 – 3.13</p>
       </header>
 
@@ -159,7 +159,7 @@ function App() {
         {' | '}
         <a href="https://github.com/SkychenLee/pylingual" target="_blank" rel="noopener noreferrer">GitHub</a>
         {' | '}
-        <span>Py大星 Web 版</span>
+        <span>PyXray Web</span>
       </footer>
     </div>
   );

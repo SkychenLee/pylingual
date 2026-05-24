@@ -298,7 +298,7 @@ async def serve_frontend(full_path: str):
     index_path = STATIC_DIR / "index.html"
     if not index_path.exists():
         return JSONResponse({
-            "message": "Py大星 反编译器 API",
+            "message": "PyXray 反编译器 API",
             "docs": "/docs",
             "frontend_built": False,
         })
