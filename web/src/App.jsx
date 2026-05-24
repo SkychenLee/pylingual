@@ -11,15 +11,37 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [fileName, setFileName] = useState('');
   const [clock, setClock] = useState('');
+  const [phaseLabel, setPhaseLabel] = useState('');
   const uploadingRef = useRef(false);
 
   useEffect(() => {
+    const phases = [
+      { start: 5, end: 8, name: 'dawn', label: '黎明 · Dawn' },
+      { start: 8, end: 12, name: 'morning', label: '晨光 · Morning' },
+      { start: 12, end: 15, name: 'noon', label: '正午 · Noon' },
+      { start: 15, end: 18, name: 'afternoon', label: '午后 · Afternoon' },
+      { start: 18, end: 20, name: 'dusk', label: '黄昏 · Dusk' },
+    ];
+    const nightPhase = { name: 'night', label: '深夜 · Night' };
+
+    const getPhase = (h) => {
+      for (const p of phases) {
+        if (h >= p.start && h < p.end) return p;
+      }
+      return nightPhase;
+    };
+
     const tick = () => {
       const now = new Date();
       const pad = (n) => String(n).padStart(2, '0');
       setClock(
         `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
       );
+      const phase = getPhase(now.getHours());
+      setPhaseLabel(phase.label);
+      if (document.documentElement.dataset.theme !== phase.name) {
+        document.documentElement.dataset.theme = phase.name;
+      }
     };
     tick();
     const id = setInterval(tick, 1000);
@@ -129,7 +151,10 @@ function App() {
       <header className="header">
         <div className="header-top">
           <h1 className="logo">PYXRAY</h1>
-          <span className="clock">{clock}</span>
+          <span className="clock">
+            <span className="clock-time">{clock}</span>
+            <span className="clock-phase">{phaseLabel}</span>
+          </span>
         </div>
         <div className="header-sub">
           <span className="version-badge">v1.0 · py3.6–3.13</span>

@@ -1,33 +1,169 @@
 /*
- * PyXray — X-RAY LAB Theme
- * Aesthetic: Sci-fi forensic analysis terminal / medical imaging device
- * Palette: Deep black (#08090d) + Electric cyan-mint (#00e5c7) + Amber accent
+ * PyXray — Time-Aware X-RAY LAB Theme
+ * Aesthetic: Sci-fi forensic analysis terminal
+ * Palette shifts across 6 time-of-day phases
  */
 
+/* ── @property enables smooth CSS variable animation ── */
+@property --primary        { syntax: '<color>'; inherits: true; initial-value: #00e5c7; }
+@property --primary-hover  { syntax: '<color>'; inherits: true; initial-value: #00ffd9; }
+@property --success        { syntax: '<color>'; inherits: true; initial-value: #00e5c7; }
+@property --error          { syntax: '<color>'; inherits: true; initial-value: #ff4d6a; }
+@property --warning        { syntax: '<color>'; inherits: true; initial-value: #ffb020; }
+@property --bg             { syntax: '<color>'; inherits: true; initial-value: #08090d; }
+@property --surface-tint   { syntax: '<color>'; inherits: true; initial-value: rgb(11, 14, 20); }
+@property --surface-tint-2 { syntax: '<color>'; inherits: true; initial-value: rgb(16, 20, 28); }
+@property --surface-solid  { syntax: '<color>'; inherits: true; initial-value: #0b0e14; }
+@property --text           { syntax: '<color>'; inherits: true; initial-value: #c8d1db; }
+@property --text-secondary { syntax: '<color>'; inherits: true; initial-value: #8892a0; }
+@property --text-tertiary  { syntax: '<color>'; inherits: true; initial-value: #4e5664; }
+@property --text-quaternary{ syntax: '<color>'; inherits: true; initial-value: #323945; }
+@property --scanline-alpha { syntax: '<number>'; inherits: true; initial-value: 3.5; }
+
 :root {
-  --bg: #08090d;
-  --surface: rgba(11, 14, 20, 0.92);
-  --surface-solid: #0b0e14;
-  --surface-2: rgba(16, 20, 28, 0.85);
-  --border: rgba(0, 229, 199, 0.10);
-  --border-strong: rgba(0, 229, 199, 0.22);
-  --text: #c8d1db;
-  --text-secondary: #8892a0;
-  --text-tertiary: #4e5664;
-  --text-quaternary: #323945;
-  --primary: #00e5c7;
-  --primary-hover: #00ffd9;
-  --primary-light: rgba(0, 229, 199, 0.10);
-  --success: #00e5c7;
-  --success-light: rgba(0, 229, 199, 0.10);
-  --error: #ff4d6a;
-  --error-light: rgba(255, 77, 106, 0.10);
-  --warning: #ffb020;
-  --glow: rgba(0, 229, 199, 0.18);
   --mono: 'JetBrains Mono', 'SF Mono', 'Menlo', 'Consolas', 'Microsoft YaHei', monospace;
   --sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --transition: 0.26s cubic-bezier(0.4, 0, 0.2, 1);
-  --grid: radial-gradient(circle, rgba(0,229,199,0.07) 1px, transparent 1px);
+
+  /* ── Night 20–05 (default) : cyan-mint ── */
+  --bg: #08090d;
+  --surface-tint:   rgb(11, 14, 20);
+  --surface-tint-2: rgb(16, 20, 28);
+  --surface-solid:  #0b0e14;
+  --surface:   color-mix(in srgb, var(--surface-tint)   92%, transparent);
+  --surface-2: color-mix(in srgb, var(--surface-tint-2) 85%, transparent);
+  --text:           #c8d1db;
+  --text-secondary: #8892a0;
+  --text-tertiary:  #4e5664;
+  --text-quaternary:#323945;
+  --primary:        #00e5c7;
+  --primary-hover:  #00ffd9;
+  --primary-light:  color-mix(in srgb, var(--primary) 10%, transparent);
+  --border:         color-mix(in srgb, var(--primary) 10%, transparent);
+  --border-strong:  color-mix(in srgb, var(--primary) 22%, transparent);
+  --success:        #00e5c7;
+  --success-light:  color-mix(in srgb, var(--success) 10%, transparent);
+  --error:          #ff4d6a;
+  --error-light:    color-mix(in srgb, var(--error) 10%, transparent);
+  --warning:        #ffb020;
+  --glow:           color-mix(in srgb, var(--primary) 18%, transparent);
+  --grid: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--primary) 7%, transparent) 1px,
+    transparent 1px
+  );
+  --code-bg: #011627;
+  --line-number:  #436599;
+  --scanline-alpha: 3.5;
+
+  /* Animate theme colors across 2 seconds */
+  transition:
+    --primary 2s ease,
+    --primary-hover 2s ease,
+    --bg 2s ease,
+    --surface-tint 2s ease,
+    --surface-tint-2 2s ease,
+    --surface-solid 2s ease,
+    --text 2s ease,
+    --text-secondary 2s ease,
+    --text-tertiary 2s ease,
+    --text-quaternary 2s ease,
+    --success 2s ease,
+    --error 2s ease,
+    --warning 2s ease,
+    --code-bg 2s ease,
+    --line-number 2s ease,
+    --scanline-alpha 2s ease;
+}
+
+/* ── Dawn 05–08 : rose peach ── */
+:root[data-theme="dawn"] {
+  --bg:             #0d0a0a;
+  --surface-tint:   rgb(22, 14, 14);
+  --surface-tint-2: rgb(28, 20, 20);
+  --surface-solid:  #160e0e;
+  --text:           #eccfc3;
+  --text-secondary: #a87a6c;
+  --text-tertiary:  #5c3a2f;
+  --text-quaternary:#3a2622;
+  --primary:        #ff9b73;
+  --primary-hover:  #ffb895;
+  --success:        #ff9b73;
+  --code-bg:        #140d0a;
+  --line-number:    #7a4a3a;
+  --scanline-alpha: 2.5;
+}
+
+/* ── Morning 08–12 : cool sky cyan ── */
+:root[data-theme="morning"] {
+  --bg:             #070b10;
+  --surface-tint:   rgb(10, 16, 26);
+  --surface-tint-2: rgb(16, 24, 36);
+  --surface-solid:  #0a1018;
+  --text:           #c9dcea;
+  --text-secondary: #6e90a6;
+  --text-tertiary:  #3e5c70;
+  --text-quaternary:#283a48;
+  --primary:        #56d4ff;
+  --primary-hover:  #8ce4ff;
+  --success:        #56d4ff;
+  --code-bg:        #08121e;
+  --line-number:    #3d6a90;
+  --scanline-alpha: 2;
+}
+
+/* ── Noon 12–15 : electric aqua ── */
+:root[data-theme="noon"] {
+  --bg:             #060f0e;
+  --surface-tint:   rgb(10, 22, 20);
+  --surface-tint-2: rgb(16, 28, 26);
+  --surface-solid:  #0a1614;
+  --text:           #d0ebe6;
+  --text-secondary: #6ea39b;
+  --text-tertiary:  #3c5e58;
+  --text-quaternary:#263b38;
+  --primary:        #00ffd5;
+  --primary-hover:  #80ffe5;
+  --success:        #00ffd5;
+  --code-bg:        #081a18;
+  --line-number:    #3a7a72;
+  --scanline-alpha: 2;
+}
+
+/* ── Afternoon 15–18 : warm gold ── */
+:root[data-theme="afternoon"] {
+  --bg:             #0d0b06;
+  --surface-tint:   rgb(20, 18, 10);
+  --surface-tint-2: rgb(28, 24, 14);
+  --surface-solid:  #14120a;
+  --text:           #ebe0c8;
+  --text-secondary: #a89870;
+  --text-tertiary:  #5c5035;
+  --text-quaternary:#3a3220;
+  --primary:        #ffc050;
+  --primary-hover:  #ffd488;
+  --success:        #ffc050;
+  --code-bg:        #15120a;
+  --line-number:    #7a6a35;
+  --scanline-alpha: 2.5;
+}
+
+/* ── Dusk 18–20 : violet haze ── */
+:root[data-theme="dusk"] {
+  --bg:             #0b0711;
+  --surface-tint:   rgb(18, 10, 22);
+  --surface-tint-2: rgb(24, 16, 30);
+  --surface-solid:  #120a16;
+  --text:           #dbcfe8;
+  --text-secondary: #9068a6;
+  --text-tertiary:  #553a65;
+  --text-quaternary:#35243f;
+  --primary:        #c866ff;
+  --primary-hover:  #d896ff;
+  --success:        #c866ff;
+  --code-bg:        #120a18;
+  --line-number:    #6a4088;
+  --scanline-alpha: 3;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,7 +182,7 @@ body {
   background: var(--bg);
   background-image:
     var(--grid),
-    linear-gradient(180deg, #08090d 0%, #0b0f16 100%);
+    linear-gradient(180deg, var(--bg) 0%, var(--surface-solid) 100%);
   background-size: 32px 32px, 100% 100%;
   background-attachment: fixed;
   min-height: 100vh;
@@ -61,8 +197,8 @@ body::before {
     0deg,
     transparent,
     transparent 2px,
-    rgba(0, 229, 199, 0.014) 2px,
-    rgba(0, 229, 199, 0.014) 4px
+    color-mix(in srgb, var(--primary) calc(var(--scanline-alpha) * 1%), transparent) 2px,
+    color-mix(in srgb, var(--primary) calc(var(--scanline-alpha) * 1%), transparent) 4px
   );
   pointer-events: none;
   z-index: 1;
@@ -103,7 +239,7 @@ body::before {
   letter-spacing: 0.15em;
   color: var(--primary);
   line-height: 1;
-  text-shadow: 0 0 24px rgba(0, 229, 199, 0.4);
+  text-shadow: 0 0 24px color-mix(in srgb, var(--primary) 40%, transparent);
 }
 
 .clock {
@@ -113,8 +249,22 @@ body::before {
   color: var(--primary);
   letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 10px rgba(0, 229, 199, 0.35);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--primary) 35%, transparent);
   white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+  line-height: 1.2;
+}
+
+.clock-phase {
+  font-size: 0.6rem;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  letter-spacing: 0.1em;
+  text-shadow: none;
+  text-transform: uppercase;
 }
 
 .header-sub {
@@ -235,7 +385,7 @@ body::before {
 .uploader-area:hover,
 .uploader-area.drag-active {
   border-color: var(--primary);
-  box-shadow: 0 0 24px rgba(0, 229, 199, 0.12);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
 .uploader-area.disabled {
@@ -296,7 +446,7 @@ body::before {
 }
 
 .btn-browse:hover {
-  box-shadow: 0 0 16px rgba(0, 229, 199, 0.45);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--primary) 45%, transparent);
   transform: translateY(-1px);
 }
 
@@ -439,12 +589,12 @@ body::before {
   letter-spacing: 0.02em;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 12px rgba(0, 229, 199, 0.4);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--primary) 40%, transparent);
 }
 
 .progress-overall-bar {
   height: 3px;
-  background: rgba(0, 229, 199, 0.08);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
   position: relative;
   overflow: hidden;
 }
@@ -454,7 +604,7 @@ body::before {
   background: var(--primary);
   transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  box-shadow: 0 0 8px rgba(0, 229, 199, 0.5);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--primary) 50%, transparent);
 }
 
 .progress-overall-fill::after {
@@ -493,7 +643,7 @@ body::before {
 
 .progress-stage {
   padding: 0.9rem 1.5rem !important;
-  border-bottom: 1px solid rgba(0, 229, 199, 0.06);
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 6%, transparent);
   font-family: var(--mono);
   position: relative;
 }
@@ -562,7 +712,7 @@ body::before {
 .progress-bar {
   flex: 1;
   height: 4px;
-  background: rgba(0, 229, 199, 0.08);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
   border-radius: 0;
   overflow: visible;
   position: relative;
@@ -763,13 +913,13 @@ body::before {
 }
 
 .btn-copy.copied {
-  background: rgba(0, 229, 199, 0.15);
+  background: color-mix(in srgb, var(--primary) 15%, transparent);
   border-color: var(--primary);
   color: var(--primary);
 }
 
 .code-container {
-  background: #011627;
+  background: var(--code-bg);
   max-height: 65vh;
   overflow: auto;
   position: relative;
@@ -783,8 +933,8 @@ body::before {
     0deg,
     transparent 0,
     transparent 3px,
-    rgba(0, 229, 199, 0.018) 3px,
-    rgba(0, 229, 199, 0.018) 6px
+    color-mix(in srgb, var(--primary) 4.5%, transparent) 3px,
+    color-mix(in srgb, var(--primary) 4.5%, transparent) 6px
   );
   pointer-events: none;
 }
@@ -792,11 +942,11 @@ body::before {
 .code-container::-webkit-scrollbar { width: 6px; }
 .code-container::-webkit-scrollbar-track { background: transparent; }
 .code-container::-webkit-scrollbar-thumb {
-  background: rgba(0, 229, 199, 0.18);
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
   border-radius: 3px;
 }
 .code-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 229, 199, 0.35);
+  background: color-mix(in srgb, var(--primary) 35%, transparent);
 }
 
 .code-block {
@@ -815,14 +965,14 @@ body::before {
 }
 
 .code-line:hover {
-  background: rgba(0, 229, 199, 0.04);
+  background: color-mix(in srgb, var(--primary) 4%, transparent);
 }
 
 .line-number {
   display: table-cell;
   text-align: right;
   padding-right: 1.5rem;
-  color: #436599;
+  color: var(--line-number);
   user-select: none;
   min-width: 3.5ch;
   font-size: 0.72rem;
@@ -873,7 +1023,7 @@ body::before {
     var(--primary) 75%,
     transparent 100%
   );
-  box-shadow: 0 0 14px var(--primary), 0 0 30px rgba(0, 229, 199, 0.3);
+  box-shadow: 0 0 14px var(--primary), 0 0 30px color-mix(in srgb, var(--primary) 30%, transparent);
   z-index: 9999;
   pointer-events: none;
   animation: beam-sweep 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
