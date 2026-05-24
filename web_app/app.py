@@ -141,6 +141,8 @@ class DecompilationService:
             if not self.pyc_path.exists():
                 raise FileNotFoundError(f"Upload not found: {self.pyc_path}")
 
+            pyc = PYCFile(self.pyc_path)
+
             pyver = None
             if self.version:
                 try:
@@ -148,9 +150,8 @@ class DecompilationService:
                 except Exception:
                     pyver = None
 
-            pyver = pyver or PythonVersion(3.10)
+            pyver = pyver or pyc.version
             segmenter, translator = _load_models_cached(pyver)
-            pyc = PYCFile(self.pyc_path)
 
             with _tracked_list_hooks(
                 on_init=lambda name, total: self.on_progress(name, 0, total),

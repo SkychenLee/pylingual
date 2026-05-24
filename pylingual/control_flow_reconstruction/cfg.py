@@ -48,7 +48,8 @@ class CFG(DiGraph_CFT):
         InstTemplate.match_all(self)
         for n in self.nodes:
             if source is not None and n.inst.starts_line is not None:
-                n.inst.source_line = source[n.inst.starts_line - 1]
+                idx = n.inst.starts_line - 1
+                n.inst.source_line = source[idx] if 0 <= idx < len(source) else ''
             else:
                 n.inst.source_line = ''
 
