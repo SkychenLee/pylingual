@@ -9,6 +9,7 @@ function App() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [fileName, setFileName] = useState('');
   const uploadingRef = useRef(false);
 
   const reset = useCallback(() => {
@@ -17,6 +18,7 @@ function App() {
     setResult(null);
     setError(null);
     setLoading(false);
+    setFileName('');
     uploadingRef.current = false;
   }, []);
 
@@ -27,10 +29,12 @@ function App() {
     reset();
     setLoading(true);
     setError(null);
+    setFileName(file.name);
 
     if (!file.name.endsWith('.pyc')) {
       setError('仅支持 .pyc 文件');
       setLoading(false);
+      setFileName('');
       uploadingRef.current = false;
       return;
     }
@@ -49,6 +53,7 @@ function App() {
     } catch (err) {
       setError(err.message || '上传失败');
       setLoading(false);
+      setFileName('');
       uploadingRef.current = false;
     }
   }, [reset]);
@@ -84,12 +89,11 @@ function App() {
             break;
         }
       } catch {
-        // ignore parse errors on ping frames
       }
     };
 
     ws.onerror = () => {
-      setError('WebSocket connection failed. Make sure the backend is running.');
+      setError('WebSocket 连接失败，请确认后端服务已启动');
       setLoading(false);
       uploadingRef.current = false;
     };
@@ -100,9 +104,11 @@ function App() {
     };
 
     return () => {
-      try { ws.close(); } catch { /* noop */ }
+      try { ws.close(); } catch { }
     };
   }, [taskId]);
+
+  const isProcessing = loading || (taskId && !result && !error);
 
   return (
     <div className="app">
@@ -112,33 +118,42 @@ function App() {
       </header>
 
       <main className="main">
-        <FileUploader onUpload={handleUpload} disabled={loading} />
+        {!isProcessing && (
+          <FileUploader onUpload={handleUpload} disabled={false} />
+        )}
 
         {loading && !result && (
           <div className="card connecting">
-            <div className="spinner" />
-            <p>{taskId ? '正在连接反编译器...' : '上传中...'}</p>
+            <div className="connecting-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <p className="connecting-text">
+              {taskId ? `正在反编译 ${fileName}` : '上传中...'}
+            </p>
           </div>
         )}
 
         {taskId && !result && !error && (
-          <ProgressPanel stages={stages} />
+          <ProgressPanel stages={stages} fileName={fileName} />
         )}
 
         {error && (
           <div className="card error-card">
             <h3>反编译失败</h3>
             <pre className="error-msg">{error}</pre>
-            <button className="btn btn-retry" onClick={reset}>重试</button>
+            <button className="btn-retry" onClick={reset}>重试</button>
           </div>
         )}
 
         {result && (
-          <CodeViewer
-            sourceCode={result.source_code}
-            successRate={result.success_rate}
-            version={result.version}
-          />
+          <>
+            <CodeViewer
+              sourceCode={result.source_code}
+              successRate={result.success_rate}
+              version={result.version}
+            />
+            <FileUploader onUpload={handleUpload} disabled={false} />
+          </>
         )}
       </main>
 
