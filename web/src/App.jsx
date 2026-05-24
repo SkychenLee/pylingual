@@ -118,7 +118,7 @@ function App() {
       </header>
 
       <main className="main">
-        {!isProcessing && (
+        {!isProcessing && !result && (
           <FileUploader onUpload={handleUpload} disabled={false} />
         )}
 
