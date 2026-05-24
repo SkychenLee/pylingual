@@ -10,7 +10,21 @@ function App() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [fileName, setFileName] = useState('');
+  const [clock, setClock] = useState('');
   const uploadingRef = useRef(false);
+
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, '0');
+      setClock(
+        `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
+      );
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   const reset = useCallback(() => {
     setTaskId(null);
@@ -115,6 +129,9 @@ function App() {
       <header className="header">
         <div className="header-top">
           <h1 className="logo">PYXRAY</h1>
+          <span className="clock">{clock}</span>
+        </div>
+        <div className="header-sub">
           <span className="version-badge">v1.0 · py3.6–3.13</span>
         </div>
         <p className="subtitle">// 字节码反编译器 · 实时进度追踪 · 源码高亮输出</p>
