@@ -112,9 +112,7 @@ function App() {
       </header>
 
       <main className="main">
-        {!result && !error && (
-          <FileUploader onUpload={handleUpload} disabled={loading} />
-        )}
+        <FileUploader onUpload={handleUpload} disabled={loading} />
 
         {loading && !result && (
           <div className="card connecting">
@@ -140,7 +138,6 @@ function App() {
             sourceCode={result.source_code}
             successRate={result.success_rate}
             version={result.version}
-            onReset={reset}
           />
         )}
       </main>

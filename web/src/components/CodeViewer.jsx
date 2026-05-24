@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Highlight, themes } from 'prism-react-renderer';
 
-export default function CodeViewer({ sourceCode, successRate, version, onReset }) {
+export default function CodeViewer({ sourceCode, successRate, version }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -34,9 +34,6 @@ export default function CodeViewer({ sourceCode, successRate, version, onReset }
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <button className="btn-copy" onClick={handleCopy}>
             {copied ? '已复制!' : '复制代码'}
-          </button>
-          <button className="btn-reset" onClick={onReset}>
-            重新反编译
           </button>
         </div>
       </div>
