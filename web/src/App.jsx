@@ -118,7 +118,7 @@ function App() {
       </header>
 
       <main className="main">
-        {!isProcessing && !result && (
+        {!isProcessing && (
           <FileUploader onUpload={handleUpload} disabled={false} />
         )}
 
@@ -146,14 +146,11 @@ function App() {
         )}
 
         {result && (
-          <>
-            <CodeViewer
-              sourceCode={result.source_code}
-              successRate={result.success_rate}
-              version={result.version}
-            />
-            <FileUploader onUpload={handleUpload} disabled={false} />
-          </>
+          <CodeViewer
+            sourceCode={result.source_code}
+            successRate={result.success_rate}
+            version={result.version}
+          />
         )}
       </main>
 

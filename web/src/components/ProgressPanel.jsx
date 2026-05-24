@@ -57,16 +57,21 @@ export default function ProgressPanel({ stages, fileName }) {
     <div className="card progress-panel">
       <div className="progress-header">
         <div className="progress-header-left">
+          <span className="progress-file-icon">📦</span>
           <span className="progress-file-name">{fileName}</span>
         </div>
         <div className="progress-header-right">
-          <span className="progress-elapsed">{formatElapsed(elapsed)}</span>
+          <span className="progress-elapsed">⏱ {formatElapsed(elapsed)}</span>
           <span className="progress-overall">{overallPct}%</span>
         </div>
       </div>
 
       <div className="progress-overall-bar">
-        <div className="progress-overall-fill" style={{ width: `${overallPct}%` }} />
+        <div className="progress-overall-fill" style={{ width: `${overallPct}%` }}>
+          {overallPct > 8 && (
+            <span className="progress-overall-label">{overallPct}%</span>
+          )}
+        </div>
       </div>
 
       <ul className="progress-stages">
@@ -84,25 +89,35 @@ export default function ProgressPanel({ stages, fileName }) {
           return (
             <li key={key} className={`progress-stage stage-${statusClass}`}>
               <div className="progress-stage-header">
-                <span className="stage-indicator" style={{ color }}>
+                <span className="stage-indicator" style={{ color: isDone ? color : isActive ? color : undefined }}>
                   {isDone ? '✓' : isActive ? <span className="stage-dot-pulse" /> : '○'}
                 </span>
                 <span className="stage-name" style={isActive ? { color } : undefined}>{label}</span>
                 <span className="stage-detail">
                   {d && d.total > 0 ? `${d.current}/${d.total}` : '--'}
                 </span>
-                <span className="stage-pct" style={isDone ? { color } : undefined}>{percent}%</span>
               </div>
-              <div className="progress-bar">
-                <div
-                  className="progress-fill"
-                  style={{
-                    width: `${percent}%`,
-                    background: isDone
-                      ? color
-                      : `linear-gradient(90deg, ${color}, ${color}88)`,
-                  }}
-                />
+              <div className="progress-bar-row">
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill"
+                    style={{
+                      width: `${percent}%`,
+                      background: isDone
+                        ? color
+                        : isActive
+                        ? `linear-gradient(90deg, ${color}, ${color}cc)`
+                        : `${color}33`,
+                    }}
+                  >
+                    {percent > 12 && (
+                      <span className="progress-bar-label" style={{ color: '#fff' }}>{percent}%</span>
+                    )}
+                  </div>
+                </div>
+                <span className="stage-pct" style={{ color: isDone ? color : isActive ? color : undefined }}>
+                  {percent}%
+                </span>
               </div>
             </li>
           );
