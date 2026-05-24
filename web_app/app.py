@@ -83,10 +83,9 @@ def _tracked_list_hooks(
             cb(self.name, self._tl_total)
 
     def patched_progress(self, i: int):
-        self.i = getattr(self, "i", 0) + i
         cb = getattr(_tl_local, "on_progress", None)
         if cb:
-            cb(self.name, self.i, getattr(self, "_tl_total", None))
+            cb(self.name, getattr(self, "i", 0) + i, getattr(self, "_tl_total", None))
 
     def patched_del(self):
         if getattr(self, "_tl_finalized", False):
