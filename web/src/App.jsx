@@ -111,10 +111,13 @@ function App() {
   const isProcessing = loading || (taskId && !result && !error);
 
   return (
-    <div className="app">
+    <div className={`app${isProcessing ? ' processing' : ''}`}>
       <header className="header">
-        <h1>PyXray</h1>
-        <p className="subtitle">Python 字节码反编译器  |  支持 Python 3.6 – 3.13</p>
+        <div className="header-top">
+          <h1 className="logo">PYXRAY</h1>
+          <span className="version-badge">v1.0 · py3.6–3.13</span>
+        </div>
+        <p className="subtitle">// 字节码反编译器 · 实时进度追踪 · 源码高亮输出</p>
       </header>
 
       <main className="main">
@@ -155,12 +158,12 @@ function App() {
       </main>
 
       <footer className="footer">
-        <a href="https://github.com/SkychenLee/pylingual" target="_blank" rel="noopener noreferrer">https://github.com/SkychenLee/pylingual</a>
-        {' | '}
-        <a href="https://github.com/SkychenLee/pylingual" target="_blank" rel="noopener noreferrer">GitHub</a>
-        {' | '}
+        <a href="https://github.com/SkychenLee/pylingual" target="_blank" rel="noopener noreferrer">github.com/SkychenLee/pylingual</a>
+        {' · '}
         <span>PyXray Web</span>
       </footer>
+
+      {isProcessing && <div className="scan-beam" />}
     </div>
   );
 }
