@@ -308,15 +308,7 @@ class Decompiler:
         try:
             cfts = {bc.codeobj: bc_to_cft(bc, self.source_lines) for bc in TrackedList(CFLOW_STEP, self.ordered_bytecodes)}
             self.source_context = SourceContext(self.pyc, self.source_lines, cfts)
-            version = magicint2version.get(self.pyc.magic, "?")
-            time = datetime.datetime.fromtimestamp(self.pyc.timestamp, datetime.UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
-            self.source_context.header_lines = [
-                SourceLine("# Decompiled with PyLingual (https://pylingual.io)", 0, self.pyc.codeobj, meta=True),
-                SourceLine(f"# Internal filename: {self.pyc.codeobj.co_filename!r}", 0, self.pyc.codeobj, meta=True),
-                SourceLine(f"# Bytecode version: {version} ({self.pyc.magic})", 0, self.pyc.codeobj, meta=True),
-                SourceLine(f"# Source timestamp: {time} ({self.pyc.timestamp})", 0, self.pyc.codeobj, meta=True),
-                SourceLine("", 0, self.pyc.codeobj, meta=True),
-            ]
+            self.source_context.header_lines = []
         except Exception as e:
             e.add_note("From control flow reconstruction")
             raise
