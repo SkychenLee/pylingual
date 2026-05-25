@@ -200,7 +200,9 @@ function App() {
       </main>
 
       <footer className="footer">
-        <a href="https://github.com/SkychenLee/pylingual" target="_blank" rel="noopener noreferrer">github.com/SkychenLee/pylingual</a>
+        <a href="https://github.com/SkychenLee/pylingual" target="_blank" rel="noopener noreferrer">GitHub</a>
+        {' · '}
+        <a href="https://skychenlee.github.io/" target="_blank" rel="noopener noreferrer">Blog</a>
         {' · '}
         <span>PyXray Web</span>
       </footer>
