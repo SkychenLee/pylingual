@@ -18,5 +18,6 @@ dist/
 decompiled_*/
 decompiled_*.py
 web_app/uploads/
+web_app/data/
 web/node_modules/
 

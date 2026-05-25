@@ -12,6 +12,7 @@ function App() {
   const [fileName, setFileName] = useState('');
   const [clock, setClock] = useState('');
   const [phaseLabel, setPhaseLabel] = useState('');
+  const [visits, setVisits] = useState({ page_views: 0, unique_visitors: 0 });
   const uploadingRef = useRef(false);
 
   useEffect(() => {
@@ -46,6 +47,13 @@ function App() {
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/visits', { method: 'POST' })
+      .then(res => res.json())
+      .then(data => setVisits(data))
+      .catch(() => {});
   }, []);
 
   const reset = useCallback(() => {
@@ -203,6 +211,10 @@ function App() {
         <a href="https://github.com/SkychenLee/pylingual" target="_blank" rel="noopener noreferrer">GitHub</a>
         {' · '}
         <a href="https://skychenlee.github.io/" target="_blank" rel="noopener noreferrer">Blog</a>
+        {' · '}
+        <span className="footer-visits">
+          访问 <span className="visits-count">{visits.page_views}</span> · 访客 <span className="visits-count">{visits.unique_visitors}</span>
+        </span>
         {' · '}
         <span>PyXray Web</span>
       </footer>

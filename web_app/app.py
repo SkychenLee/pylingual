@@ -1,6 +1,7 @@
 import asyncio
 import hashlib
 import importlib.resources
+import json
 import logging
 import os
 import sys
@@ -16,7 +17,7 @@ PROJECT_ROOT = str(Path(__file__).resolve().parent.parent)
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -33,6 +34,47 @@ STATIC_DIR = Path(__file__).parent / "static"
 STATIC_DIR.mkdir(parents=True, exist_ok=True)
 
 MAX_UPLOAD_SIZE = 50 * 1024 * 1024
+
+
+# ── Visit counter ─────────────────────────────────────────────────────────────
+_VISIT_FILE = Path(__file__).parent / "data" / "visits.json"
+_VISIT_FILE.parent.mkdir(parents=True, exist_ok=True)
+_visit_lock = threading.Lock()
+
+
+def _load_visits() -> dict:
+    if _VISIT_FILE.exists():
+        try:
+            return json.loads(_VISIT_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"page_views": 0, "unique_ips": []}
+
+
+def _save_visits(data: dict):
+    _VISIT_FILE.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+
+
+def _record_visit(ip: str) -> int:
+    with _visit_lock:
+        data = _load_visits()
+        data["page_views"] = data.get("page_views", 0) + 1
+        unique_ips = set(data.get("unique_ips", []))
+        unique_ips.add(ip)
+        if len(unique_ips) > 5000:
+            unique_ips = set(list(unique_ips)[-3000:])
+        data["unique_ips"] = list(unique_ips)
+        _save_visits(data)
+        return data["page_views"]
+
+
+def _get_visits() -> dict:
+    with _visit_lock:
+        data = _load_visits()
+        return {
+            "page_views": data.get("page_views", 0),
+            "unique_visitors": len(data.get("unique_ips", [])),
+        }
 
 
 # ── Model cache ───────────────────────────────────────────────────────────────
@@ -218,6 +260,18 @@ async def list_models():
 @app.get("/api/health")
 async def health():
     return {"status": "ok"}
+
+
+@app.get("/api/visits")
+async def get_visits():
+    return _get_visits()
+
+
+@app.post("/api/visits")
+async def record_visit(request: Request):
+    ip = request.client.host if request.client else "unknown"
+    count = _record_visit(ip)
+    return {"page_views": count, "unique_visitors": len(_load_visits().get("unique_ips", []))}
 
 
 # ── WebSocket decompile endpoint ──────────────────────────────────────────────

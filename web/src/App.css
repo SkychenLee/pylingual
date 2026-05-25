@@ -1008,6 +1008,15 @@ body::before {
 
 .footer a:hover { color: var(--primary); }
 
+.footer-visits {
+  color: var(--text-tertiary);
+}
+
+.visits-count {
+  color: var(--primary);
+  font-weight: 600;
+}
+
 /* ── SCAN BEAM (appears during processing) ── */
 
 .scan-beam {
